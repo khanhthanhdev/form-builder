@@ -3,6 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Suspense } from "react";
 import { LuView } from "react-icons/lu"
+import { FaWpforms} from "react-icons/fa"
+import { HiCursorClick } from "react-icons/hi"
+import {TbArrowBounce} from "react-icons/tb"
+
 
 export default function Home() {
     return (
@@ -37,6 +41,33 @@ function StatsCards (props: StatsCardProps) {
             loading={loading}
             className="shadow-md shadow-blue-600"
         />
+
+        <StatsCard 
+            title="Total submissions" 
+            icon={<FaWpforms className="text-yellow-600" />}
+            helperText="All time form submissions" 
+            value={data?.submissions.toLocaleString()}
+            loading={loading}
+            className="shadow-md shadow-yellow-600"
+        />
+
+        <StatsCard 
+            title="Submission rate"  
+            icon={<HiCursorClick className="text-green-600" />}
+            helperText="Visit that result in form" 
+            value={data?.submissionRate.toLocaleString()}
+            loading={loading}
+            className="shadow-md shadow-green-600"
+        />
+
+        <StatsCard 
+            title="Bounce rate" 
+            icon={<TbArrowBounce className="text-red-600" />}
+            helperText="Visit that leave without in form" 
+            value={data?.bounceRate.toLocaleString()}
+            loading={loading}
+            className="shadow-md shadow-blue-600"
+        />
     </div>
 }
 
@@ -49,16 +80,20 @@ const StatsCard = ({title, value, icon, helperText, loading, className}: {
     className?: string;
 }) => {
     return <Card className={className}>
-        <CardHeader>
-            <CardTitle>{title}</CardTitle>
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
             {icon}
         </CardHeader>
         <CardContent>
             <div className="text-2xl font-bold">
-                {!loading && <Skeleton>
-                        <span>0</span>
+                {loading && <Skeleton>
+                        <span className="opacity-0">0</span>
                     </Skeleton>}
+                {!loading && value}
             </div>
+            <p className="text-xs text-muted-foreground pt-1">
+                {helperText}
+            </p>
         </CardContent>
     </Card>
 }
