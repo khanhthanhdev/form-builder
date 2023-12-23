@@ -31,29 +31,42 @@ import * as z from "zod"
 import { useForm } from 'react-hook-form'
 import { Input } from './ui/input'
 import { Textarea } from './ui/textarea'
-
-const formSchema = z.object({
-    name: z.string().min(4),
-    description: z.string().optional(),
-})
-
-type formSchemaType = z.infer<typeof formSchema>
+import { toast } from './ui/use-toast'
+import { formSchemaType, formSchema } from '@/schemas/form'
+import { CreateForm } from '@/actions/form'
 
 const CreateFormBtn = () => {
 
-    const form = useForm<z.infer<typeof formSchema>>({
+    const form = useForm<formSchemaType>({
         resolver: zodResolver(formSchema)
     
     });
 
-    function onSubmit(values: formSchemaType) {
-        console.log(values);
+    async function onSubmit(values: formSchemaType) {
+        try {
+            const formId =  await CreateForm(values)
+            toast({
+                title: "Success",
+                description:"Form created successfully",
+            })
+            console.log("FORM ID", formId)
+        } catch (error) {
+            toast({
+                title: "Error",
+                description:"Something went wrong",
+                variant: "destructive"
+            })
+        }
     }
 
   return (
     <Dialog>
         <DialogTrigger asChild>
-            <Button>Create new form</Button>
+            <Button variant={"outline"} className='group border border-primary/20 h-[190px] items-center justify-center flex flex-col hover:border-primary hover:cursor-pointer border-dashed gap-4 bg-background'>
+                
+                <BsFileEarmarkPlus className="h-8 w-8 text-muted-foreground group-hover:text-primary" />
+                <p className='font-bold text-xl text-muted-foreground group-hover:text-primary'>Create new form</p>
+            </Button>
         </DialogTrigger>
         <DialogContent>
             <DialogHeader>
@@ -71,7 +84,7 @@ const CreateFormBtn = () => {
                         name="name"
                         render={({field}) => (
                             <FormItem>
-                                <FormLabel>name</FormLabel>
+                                <FormLabel>Name</FormLabel>
                                 <FormControl>
                                     <Input {...field} />
                                 </FormControl>
@@ -96,7 +109,7 @@ const CreateFormBtn = () => {
             </Form> 
             <DialogFooter>
                 <Button
-                onClick={() => form.handleSubmit(onSubmit)()}
+                onClick={form.handleSubmit(onSubmit)}
                 className='w-full mt-4' disabled={form.formState.isSubmitting}>
                     {!form.formState.isSubmitting && <span>Save</span>}
                     {form.formState.isSubmitting && <ImSpinner2 className='animate-spin' />}
