@@ -5,6 +5,7 @@ import React from 'react'
 import PreviewDialogBtn from './PreviewDialogBtn'
 import SaveFormBtn from './SaveFormBtn'
 import PublishFormBtn from './PublishFormBtn'
+import Designer from './Designer'
 
 const FormBuilder = ({form}: {form:Form}) => {
   return <main className='flex flex-col w-full'>
@@ -23,8 +24,8 @@ const FormBuilder = ({form}: {form:Form}) => {
             )}
         </div>
     </nav>
-    <div className=''>
-
+    <div className='flex w-full flex-grow items-center justify-center relative overflow-y-auto h-[200px] bg-accent bg-[url(/paper.svg)] dark:bg-[url(/paper-dark.svg)]'>
+        <Designer />
     </div>
   </main>
 }
